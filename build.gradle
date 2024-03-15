@@ -34,9 +34,15 @@ dependencies {
 	testImplementation 'io.projectreactor:reactor-test'
 	implementation 'org.json:json:20230227'
 	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
-	implementation 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+compileJava {
+	options.compilerArgs += [
+			'-Amapstruct.defaultComponentModel=spring'
+	]
 }
