@@ -2,6 +2,8 @@ package com.fiap.hackathon.accomodation.service;
 
 import com.fiap.hackathon.accomodation.entity.Accommodation;
 import com.fiap.hackathon.accomodation.repository.AccomodationRepository;
+import com.fiap.hackathon.property.entity.Property;
+import com.fiap.hackathon.property.repository.PropertyRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ import java.util.UUID;
 public class AccommodationService {
     @Autowired
     private AccomodationRepository accommodationRepository;
+    @Autowired
+    private PropertyRepository propertyRepository;
 
     public List<Accommodation> getAllAccommodations() {
         return accommodationRepository.findAll();
@@ -23,8 +27,9 @@ public class AccommodationService {
     }
 
     public Accommodation createAccommodation(Accommodation accommodation) {
-        Accommodation existingAccommodation = accommodationRepository.findByName(accommodation.getName());
         // TODO: Se der tempo, colocar a validação de property + accommodationNumber
+        Property existingProperty = propertyRepository.findById(accommodation.getProperty().getId()).orElseThrow(() -> new EntityNotFoundException("property not found"));
+        Accommodation existingAccommodation = accommodationRepository.findByName(accommodation.getName());
 
         if (existingAccommodation != null) {
             throw new IllegalArgumentException("accommodation already exists");

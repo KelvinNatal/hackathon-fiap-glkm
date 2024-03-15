@@ -1,5 +1,6 @@
 package com.fiap.hackathon.accomodation.entity;
 
+import com.fiap.hackathon.property.entity.Property;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,4 +27,8 @@ public class Accommodation {
 
     @Column(nullable = false)
     private BigDecimal cost;
+
+    @ManyToOne
+    @JoinColumn(name = "property_id", nullable = false)
+    private Property property;
 }

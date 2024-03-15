@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public record AccommodationRequestDTO(
         @NotBlank
@@ -11,6 +12,8 @@ public record AccommodationRequestDTO(
         @NotBlank
         Integer guests,
         @NotNull
-        BigDecimal cost
+        BigDecimal cost,
+        @NotNull
+        UUID propertyId
 ) {
 }

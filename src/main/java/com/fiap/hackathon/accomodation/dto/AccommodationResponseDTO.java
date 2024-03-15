@@ -7,6 +7,7 @@ public record AccommodationResponseDTO(
         UUID id,
         String name,
         Integer guests,
-        BigDecimal cost
+        BigDecimal cost,
+        UUID propertyId
 ) {
 }
