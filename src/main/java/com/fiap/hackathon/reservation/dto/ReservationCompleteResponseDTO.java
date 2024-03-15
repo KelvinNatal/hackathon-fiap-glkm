@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -13,12 +14,15 @@ import java.util.List;
 @NoArgsConstructor
 public class ReservationCompleteResponseDTO {
 
-    private ReservationEntity reservationEntity;
+    private ReservationEntity reservation;
 
-    private List<ExtraServiceResponseDTO> extraServiceEntity;
+    private List<ExtraServiceResponseDTO> extraServices;
 
-    public ReservationCompleteResponseDTO(ReservationEntity reservation, List<ExtraServiceResponseDTO> extraServices) {
-        this.reservationEntity = reservation;
-        this.extraServiceEntity = extraServices;
+    private BigDecimal total;
+
+    public ReservationCompleteResponseDTO(ReservationEntity reservation, List<ExtraServiceResponseDTO> extraServices, BigDecimal total) {
+        this.reservation = reservation;
+        this.extraServices = extraServices;
+        this.total = total;
     }
 }
