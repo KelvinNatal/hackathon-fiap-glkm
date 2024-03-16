@@ -6,17 +6,16 @@ import com.fiap.hackathon.aditional.dto.AdditionalResponseDTO;
 import com.fiap.hackathon.aditional.mapper.AdditionalMapper;
 import com.fiap.hackathon.aditional.projection.AdditionalProjection;
 import com.fiap.hackathon.aditional.repository.AdditionalRepository;
-import com.fiap.hackathon.client.entity.ClientEntity;
-import com.fiap.hackathon.client.mapper.ClientMapper;
 import com.fiap.hackathon.client.repository.ClientRepository;
+import com.fiap.hackathon.email.MailSenderService;
 import com.fiap.hackathon.extraservice.dto.ExtraServiceResponseDTO;
 import com.fiap.hackathon.extraservice.mapper.ExtraServiceMapper;
 import com.fiap.hackathon.extraservice.projection.ExtraServiceProjection;
 import com.fiap.hackathon.extraservice.repository.ExtraServiceRepository;
 import com.fiap.hackathon.global.relation.reservationadditional.entity.ReservationAdditionalRelation;
+import com.fiap.hackathon.global.relation.reservationadditional.repository.ReservatonAdditionalRepository;
 import com.fiap.hackathon.global.relation.reservationextraservice.entity.ReservationExtraServiceRelation;
 import com.fiap.hackathon.global.relation.reservationextraservice.repository.ReservatonExtraServiceRepository;
-import com.fiap.hackathon.global.relation.reservationadditional.repository.ReservatonAdditionalRepository;
 import com.fiap.hackathon.reservation.dto.ReservationAddItemRequestDTO;
 import com.fiap.hackathon.reservation.dto.ReservationCompleteResponseDTO;
 import com.fiap.hackathon.reservation.dto.ReservationRequestDTO;
@@ -24,12 +23,15 @@ import com.fiap.hackathon.reservation.dto.ReservationUpdateRequestDTO;
 import com.fiap.hackathon.reservation.entity.ReservationEntity;
 import com.fiap.hackathon.reservation.mapper.ReservationMapper;
 import com.fiap.hackathon.reservation.repository.ReservationRepository;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,7 +53,17 @@ public class ReservationService {
 
     private final ReservatonAdditionalRepository reservatonAdditionalRepository;
 
-    public ReservationService(ReservationRepository reservationRepository, ClientRepository clientRepository, ExtraServiceRepository extraServiceRepository, ReservatonExtraServiceRepository reservationExtraServiceRepository, AdditionalRepository additionalRepository,  ReservatonAdditionalRepository reservatonAdditionalRepository, AccomodationRepository accomodationRepository) {
+    private final MailSenderService mailService;
+
+    public ReservationService(ReservationRepository reservationRepository,
+                              ClientRepository clientRepository,
+                              ExtraServiceRepository extraServiceRepository,
+                              ReservatonExtraServiceRepository reservationExtraServiceRepository,
+                              AdditionalRepository additionalRepository,
+                              ReservatonAdditionalRepository reservatonAdditionalRepository,
+                              AccomodationRepository accomodationRepository,
+                              MailSenderService mailService) {
+
         this.reservationRepository = reservationRepository;
         this.extraServiceRepository = extraServiceRepository;
         this.clientRepository = clientRepository;
@@ -59,6 +71,7 @@ public class ReservationService {
         this.additionalRepository = additionalRepository;
         this.reservatonAdditionalRepository = reservatonAdditionalRepository;
         this.accomodationRepository = accomodationRepository;
+        this.mailService = mailService;
     }
 
     @Transactional(readOnly = true)
@@ -77,7 +90,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationEntity createReservation(ReservationRequestDTO reservationRequestDTO){
+    public ReservationEntity createReservation(ReservationRequestDTO reservationRequestDTO) throws MessagingException, IOException {
         clientRepository.findById(reservationRequestDTO.idClient()).orElseThrow(() -> new EntityNotFoundException("client not found"));
 
         if(reservationRepository.validateDisponibility(reservationRequestDTO.idRoom(), reservationRequestDTO.startDate()) != null){
@@ -98,6 +111,12 @@ public class ReservationService {
             reservationExtraServiceRelation.getReservationExtraServicePK().setExtraService(extraServiceRepository.findById(extraService).orElseThrow(() -> new EntityNotFoundException("service " + extraService + " not found")));
             reservationExtraServiceRepository.save(reservationExtraServiceRelation);
         });
+
+        String startDate = reservationRequestDTO.startDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
+        String endDate = reservationRequestDTO.endDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
+        String idReserva = reservationEntity.getId().toString();
+
+        mailService.sendEmailFromTemplate(startDate, endDate, idReserva);
 
         return reservationEntity;
     }
