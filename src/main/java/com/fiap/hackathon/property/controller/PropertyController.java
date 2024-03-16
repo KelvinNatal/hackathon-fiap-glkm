@@ -6,6 +6,7 @@ import com.fiap.hackathon.property.dto.PropertyRequestDTO;
 import com.fiap.hackathon.property.entity.Property;
 import com.fiap.hackathon.property.mapper.PropertyMapper;
 import com.fiap.hackathon.property.service.PropertyService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,7 +40,7 @@ public class PropertyController {
     }
 
     @PostMapping
-    public ResponseEntity createProperty(@RequestBody PropertyRequestDTO property) {
+    public ResponseEntity createProperty(@RequestBody @Valid PropertyRequestDTO property) {
         Property createdProperty = propertyService.createProperty(PropertyMapper.INSTANCE.propertyRequestDTOToProperty(property));
         List<Accommodation> accommodations = new ArrayList<>();
         return new ResponseEntity(PropertyMapper.INSTANCE.propertyToPropertyResponseDTO(createdProperty, accommodations), HttpStatus.CREATED);

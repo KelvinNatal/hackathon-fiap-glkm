@@ -7,6 +7,7 @@ import com.fiap.hackathon.property.repository.PropertyRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class PropertyService {
         Property existingProperty = propertyRepository.findByName(property.getName());
 
         if (existingProperty != null) {
-            throw new IllegalArgumentException("property already exists");
+            throw new DataIntegrityViolationException("property already exists");
         }
 
         return propertyRepository.save(property);
