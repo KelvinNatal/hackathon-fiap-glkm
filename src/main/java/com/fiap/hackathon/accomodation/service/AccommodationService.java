@@ -26,9 +26,11 @@ public class AccommodationService {
         return accommodationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("accommodation not found"));
     }
 
-    public Accommodation createAccommodation(Accommodation accommodation) {
+    public Accommodation createAccommodation(Accommodation accommodation, UUID propertyId) {
         // TODO: Se der tempo, colocar a validação de property + accommodationNumber
-        Property existingProperty = propertyRepository.findById(accommodation.getProperty().getId()).orElseThrow(() -> new EntityNotFoundException("property not found"));
+        Property existingProperty = propertyRepository.findById(propertyId).orElseThrow(() -> new EntityNotFoundException("property not found"));
+        accommodation.setProperty(existingProperty);
+
         Accommodation existingAccommodation = accommodationRepository.findByName(accommodation.getName());
 
         if (existingAccommodation != null) {
@@ -54,5 +56,9 @@ public class AccommodationService {
         } else {
             throw new EntityNotFoundException("accommodation not found");
         }
+    }
+
+    public List<Accommodation> getAllAccommodationsByPropertyId(UUID propertyId) {
+        return accommodationRepository.findAllByPropertyId(propertyId);
     }
 }

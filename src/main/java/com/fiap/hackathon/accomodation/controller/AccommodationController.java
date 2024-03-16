@@ -33,7 +33,7 @@ public class AccommodationController {
 
     @PostMapping
     public ResponseEntity createAccommodation(@RequestBody AccommodationRequestDTO accommodation) {
-        Accommodation createdAccommodation = accommodationService.createAccommodation(AccommodationMapper.INSTANCE.accommodationRequestDTOToAccommodation(accommodation));
+        Accommodation createdAccommodation = accommodationService.createAccommodation(AccommodationMapper.INSTANCE.accommodationRequestDTOToAccommodation(accommodation), accommodation.propertyId());
         return new ResponseEntity(AccommodationMapper.INSTANCE.accommodationToAccommodationResponseDTO(createdAccommodation), HttpStatus.CREATED);
     }
 

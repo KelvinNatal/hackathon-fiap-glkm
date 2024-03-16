@@ -5,14 +5,13 @@ import com.fiap.hackathon.accomodation.dto.AccommodationResponseWithoutPropertyD
 import java.util.List;
 import java.util.UUID;
 
-public record PropertyResponseDTO(
+public record PropertyResponseWithoutAccommodationsDTO(
         UUID id,
         String name,
         String address,
         String city,
         String district,
         String state,
-        String country,
-        List<AccommodationResponseWithoutPropertyDTO> accommodations
+        String country
 ) {
 }
