@@ -1,4 +1,4 @@
-package com.fiap.hackathon.email;
+package com.fiap.hackathon.global.email;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
@@ -31,11 +31,11 @@ public class MailSenderService {
         mailSender.send(message);
     }
 
-    public void sendEmailFromTemplate(String startDate, String endDate, String idReserva) throws MessagingException, IOException {
+    public void sendEmailFromTemplate(String startDate, String endDate, String idReserva, String mailTo) throws MessagingException, IOException {
         MimeMessage message = mailSender.createMimeMessage();
 
         message.setFrom(new InternetAddress("fiap.ecomerce.hackathon@gmail.com"));
-        message.setRecipients(MimeMessage.RecipientType.TO, "guilhermebigois@gmail.com");
+        message.setRecipients(MimeMessage.RecipientType.TO, mailTo);
         message.setSubject("Test email from my Springapplication");
 
         Resource resource = resourceLoader.getResource("classpath:example.html");
@@ -43,13 +43,11 @@ public class MailSenderService {
         byte[] bytes = Files.readAllBytes(Paths.get(resource.getURI()));
         String htmlTemplate = new String(bytes, StandardCharsets.UTF_8);
 
-        htmlTemplate = htmlTemplate.replace("[Nome do Hotel]", "Diefenthaeler");
         htmlTemplate = htmlTemplate.replace("[Data de Check-in]", startDate);
         htmlTemplate = htmlTemplate.replace("[Data de Check-out]", endDate);
         htmlTemplate = htmlTemplate.replace("[ID da reserva]", idReserva);
 
         message.setContent(htmlTemplate, "text/html; charset=utf-8");
-
         mailSender.send(message);
     }
 }

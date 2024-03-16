@@ -6,8 +6,9 @@ import com.fiap.hackathon.aditional.dto.AdditionalResponseDTO;
 import com.fiap.hackathon.aditional.mapper.AdditionalMapper;
 import com.fiap.hackathon.aditional.projection.AdditionalProjection;
 import com.fiap.hackathon.aditional.repository.AdditionalRepository;
+import com.fiap.hackathon.client.entity.ClientEntity;
 import com.fiap.hackathon.client.repository.ClientRepository;
-import com.fiap.hackathon.email.MailSenderService;
+import com.fiap.hackathon.global.email.MailSenderService;
 import com.fiap.hackathon.extraservice.dto.ExtraServiceResponseDTO;
 import com.fiap.hackathon.extraservice.mapper.ExtraServiceMapper;
 import com.fiap.hackathon.extraservice.projection.ExtraServiceProjection;
@@ -91,7 +92,7 @@ public class ReservationService {
 
     @Transactional
     public ReservationEntity createReservation(ReservationRequestDTO reservationRequestDTO) throws MessagingException, IOException {
-        clientRepository.findById(reservationRequestDTO.idClient()).orElseThrow(() -> new EntityNotFoundException("client not found"));
+        ClientEntity client = clientRepository.findById(reservationRequestDTO.idClient()).orElseThrow(() -> new EntityNotFoundException("client not found"));
 
         if(reservationRepository.validateDisponibility(reservationRequestDTO.idRoom(), reservationRequestDTO.startDate()) != null){
             throw new DataIntegrityViolationException("already exists a reservation on this date");
@@ -116,8 +117,7 @@ public class ReservationService {
         String endDate = reservationRequestDTO.endDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
         String idReserva = reservationEntity.getId().toString();
 
-        mailService.sendEmailFromTemplate(startDate, endDate, idReserva);
-
+        mailService.sendEmailFromTemplate(startDate, endDate, idReserva, client.getEmail());
         return reservationEntity;
     }
 

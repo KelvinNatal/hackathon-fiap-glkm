@@ -1,4 +1,4 @@
-package com.fiap.hackathon.email;
+package com.fiap.hackathon.global.email;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
