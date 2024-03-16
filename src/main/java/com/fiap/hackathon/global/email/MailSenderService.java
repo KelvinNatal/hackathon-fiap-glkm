@@ -36,7 +36,7 @@ public class MailSenderService {
 
         message.setFrom(new InternetAddress("fiap.ecomerce.hackathon@gmail.com"));
         message.setRecipients(MimeMessage.RecipientType.TO, mailTo);
-        message.setSubject("Test email from my Springapplication");
+        message.setSubject("GLKM Hackapp | Confirmação da reserva " + idReserva);
 
         Resource resource = resourceLoader.getResource("classpath:example.html");
 
