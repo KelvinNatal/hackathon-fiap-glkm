@@ -4,6 +4,7 @@ import com.fiap.hackathon.accomodation.dto.AccommodationRequestDTO;
 import com.fiap.hackathon.accomodation.entity.Accommodation;
 import com.fiap.hackathon.accomodation.mapper.AccommodationMapper;
 import com.fiap.hackathon.accomodation.service.AccommodationService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,13 +33,13 @@ public class AccommodationController {
     }
 
     @PostMapping
-    public ResponseEntity createAccommodation(@RequestBody AccommodationRequestDTO accommodation) {
-        Accommodation createdAccommodation = accommodationService.createAccommodation(AccommodationMapper.INSTANCE.accommodationRequestDTOToAccommodation(accommodation));
+    public ResponseEntity createAccommodation(@RequestBody @Valid AccommodationRequestDTO accommodation) {
+        Accommodation createdAccommodation = accommodationService.createAccommodation(AccommodationMapper.INSTANCE.accommodationRequestDTOToAccommodation(accommodation), accommodation.propertyId());
         return new ResponseEntity(AccommodationMapper.INSTANCE.accommodationToAccommodationResponseDTO(createdAccommodation), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateAccommodation(@PathVariable UUID id, @RequestBody AccommodationRequestDTO accommodation) {
+    public ResponseEntity updateAccommodation(@PathVariable UUID id, @RequestBody @Valid AccommodationRequestDTO accommodation) {
         Accommodation updatedAccommodation = accommodationService.updateAccommodation(id, AccommodationMapper.INSTANCE.accommodationRequestDTOToAccommodation(accommodation));
         return ResponseEntity.ok(AccommodationMapper.INSTANCE.accommodationToAccommodationResponseDTO(updatedAccommodation));
     }

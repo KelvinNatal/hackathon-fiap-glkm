@@ -16,3 +16,18 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  mail:
+    username: fiap.ecomerce.hackathon@gmail.com
+    properties:
+      mail:
+        smtp:
+          starttls:
+            required: true
+            enable: true
+          auth: true
+      transport:
+        protocol: smtp
+    host: smtp.gmail.com
+    port: 587
+    password: dytj wyod ppan yigf

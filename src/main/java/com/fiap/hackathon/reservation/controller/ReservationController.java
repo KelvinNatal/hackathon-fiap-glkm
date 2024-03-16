@@ -6,6 +6,7 @@ import com.fiap.hackathon.reservation.dto.ReservationRequestDTO;
 import com.fiap.hackathon.reservation.dto.ReservationUpdateRequestDTO;
 import com.fiap.hackathon.reservation.entity.ReservationEntity;
 import com.fiap.hackathon.reservation.service.ReservationService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -31,7 +33,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationEntity> createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO){
+    public ResponseEntity<ReservationEntity> createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO) throws MessagingException, IOException {
         return ResponseEntity.status(HttpStatus.CREATED).body(reservationService.createReservation(reservationRequestDTO));
     }
 

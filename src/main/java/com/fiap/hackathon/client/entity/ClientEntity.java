@@ -1,6 +1,7 @@
 package com.fiap.hackathon.client.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,7 @@ public class ClientEntity {
     @Column(nullable = false)
     private String telephone;
 
+    @Email
     @Column(nullable = false)
     private String email;
 }

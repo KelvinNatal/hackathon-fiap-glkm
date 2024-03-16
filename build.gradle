@@ -35,6 +35,9 @@ dependencies {
 	implementation 'org.json:json:20230227'
 	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+	implementation 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.2.3'
+
 }
 
 tasks.named('test') {

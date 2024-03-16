@@ -1,9 +1,13 @@
 package com.fiap.hackathon.property.service;
 
+import com.fiap.hackathon.accomodation.entity.Accommodation;
+import com.fiap.hackathon.accomodation.repository.AccomodationRepository;
 import com.fiap.hackathon.property.entity.Property;
 import com.fiap.hackathon.property.repository.PropertyRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +17,8 @@ import java.util.UUID;
 public class PropertyService {
     @Autowired
     private PropertyRepository propertyRepository;
+    @Autowired
+    private AccomodationRepository accomodationRepository;
 
     public List<Property> getAllProperties() {
         return propertyRepository.findAll();
@@ -26,7 +32,7 @@ public class PropertyService {
         Property existingProperty = propertyRepository.findByName(property.getName());
 
         if (existingProperty != null) {
-            throw new IllegalArgumentException("property already exists");
+            throw new DataIntegrityViolationException("property already exists");
         }
 
         return propertyRepository.save(property);
@@ -45,8 +51,14 @@ public class PropertyService {
         return propertyRepository.save(existingProperty);
     }
 
+    @Transactional
     public void deleteProperty(UUID id) {
         if (propertyRepository.existsById(id)) {
+            List<Accommodation> accommodations = accomodationRepository.findAllByPropertyId(id);
+            for (Accommodation accommodation : accommodations) {
+                accomodationRepository.deleteById(accommodation.getId());
+            }
+
             propertyRepository.deleteById(id);
         } else {
             throw new EntityNotFoundException("property not found");
