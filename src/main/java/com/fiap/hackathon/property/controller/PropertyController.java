@@ -47,7 +47,7 @@ public class PropertyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateProperty(@PathVariable UUID id, @RequestBody PropertyRequestDTO property) {
+    public ResponseEntity updateProperty(@PathVariable UUID id, @RequestBody @Valid PropertyRequestDTO property) {
         Property updatedProperty = propertyService.updateProperty(id, PropertyMapper.INSTANCE.propertyRequestDTOToProperty(property));
         List<Accommodation> accommodations = accommodationService.getAllAccommodationsByPropertyId(updatedProperty.getId());
         return ResponseEntity.ok(PropertyMapper.INSTANCE.propertyToPropertyResponseDTO(updatedProperty, accommodations));
