@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "Additionals")
+@Table(name = "additionals")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -19,7 +19,7 @@ public class AdditionalEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID idAdditional;
+    private UUID id;
 
     @Column(nullable = false)
     private String name;

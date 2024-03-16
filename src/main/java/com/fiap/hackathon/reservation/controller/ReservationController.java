@@ -1,11 +1,15 @@
 package com.fiap.hackathon.reservation.controller;
 
+import com.fiap.hackathon.reservation.dto.ReservationAddItemRequestDTO;
 import com.fiap.hackathon.reservation.dto.ReservationCompleteResponseDTO;
 import com.fiap.hackathon.reservation.dto.ReservationRequestDTO;
+import com.fiap.hackathon.reservation.dto.ReservationUpdateRequestDTO;
 import com.fiap.hackathon.reservation.entity.ReservationEntity;
 import com.fiap.hackathon.reservation.service.ReservationService;
 import jakarta.validation.Valid;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,8 +35,8 @@ public class ReservationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(reservationService.createReservation(reservationRequestDTO));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> addItemReservation(@PathVariable UUID id, @Valid @RequestBody Reser reservationAddItemRequestDTO){
+    @PutMapping(value = "/addAdditional/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> addItemReservation(@PathVariable UUID id, @Valid @RequestBody ReservationAddItemRequestDTO reservationAddItemRequestDTO){
         reservationService.addItemReservation(id, reservationAddItemRequestDTO);
         JSONObject response = new JSONObject();
 
@@ -40,12 +44,9 @@ public class ReservationController {
         return ResponseEntity.status(HttpStatus.OK).body(response.toString());
     }
 
-    public void getAllReservationsByLocation(){
-
-    }
-
-    public void updateReservation(){
-
+    @PutMapping("/{id}")
+    public ResponseEntity<ReservationEntity> updateReservation(@PathVariable UUID id, @Valid @RequestBody ReservationUpdateRequestDTO reservationUpdateRequestDTO){
+        return ResponseEntity.status(HttpStatus.OK).body(reservationService.updateReservation(id, reservationUpdateRequestDTO));
     }
 
     @DeleteMapping("/{id}")

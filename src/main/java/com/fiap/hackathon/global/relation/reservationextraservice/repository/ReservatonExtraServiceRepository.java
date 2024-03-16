@@ -1,8 +1,8 @@
 package com.fiap.hackathon.global.relation.reservationextraservice.repository;
 
+import com.fiap.hackathon.extraservice.projection.ExtraServiceProjection;
 import com.fiap.hackathon.global.relation.reservationextraservice.entity.ReservationExtraServiceRelation;
 import com.fiap.hackathon.global.relation.reservationextraservice.pk.ReservationExtraServicePK;
-import com.fiap.hackathon.global.relation.reservationextraservice.projection.ExtraServiceProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

@@ -11,11 +11,4 @@ import java.util.UUID;
 public interface AdditionalRepository extends JpaRepository<AdditionalEntity, UUID> {
 
     Page<AdditionalEntity> findAll(Pageable pageable);
-
-    AdditionalEntity findByIdAdditional(UUID id);
-
-    boolean existsByIdAdditional(UUID id);
-
-
-    void deleteByIdAdditional(UUID id);
 }

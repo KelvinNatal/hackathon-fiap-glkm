@@ -1,8 +1,8 @@
 package com.fiap.hackathon.global.relation.reservationadditional.repository;
 
+import com.fiap.hackathon.aditional.projection.AdditionalProjection;
 import com.fiap.hackathon.global.relation.reservationadditional.entity.ReservationAdditionalRelation;
 import com.fiap.hackathon.global.relation.reservationadditional.pk.ReservationAdditionalPK;
-import com.fiap.hackathon.global.relation.reservationadditional.projection.AdditionalProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -28,13 +28,13 @@ public interface ReservatonAdditionalRepository extends JpaRepository<Reservatio
     @Query(nativeQuery = true,
             value = """
                         SELECT
-                            additional.id, additional.name, additional.cost
+                            additionals.id, additionals.name, additionals.cost
                         FROM
                             additionals
                         INNER JOIN
                             reservation_additional
                         ON
-                            additional.id = reservation_additional.additional_id
+                            additionals.id = reservation_additional.additional_id
                         WHERE
                             reservation_additional.reservation_id = :reservationId
                     """)

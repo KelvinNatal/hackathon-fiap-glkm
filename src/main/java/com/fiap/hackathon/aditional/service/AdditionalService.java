@@ -4,6 +4,7 @@ import com.fiap.hackathon.aditional.dto.AdditionalResponseDTO;
 import com.fiap.hackathon.aditional.entity.AdditionalEntity;
 import com.fiap.hackathon.aditional.mapper.AdditionalMapper;
 import com.fiap.hackathon.aditional.repository.AdditionalRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +28,7 @@ public class AdditionalService {
 
     @Transactional(readOnly = true)
     public AdditionalEntity getByIdAdditional(UUID id) {
-        return additionalRepository.findByIdAdditional(id);
+        return additionalRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("additional not found"));
     }
 
 
@@ -38,23 +39,14 @@ public class AdditionalService {
 
     @Transactional
     public void removeAdditional(UUID id) {
-        AdditionalEntity additional = additionalRepository.findByIdAdditional(id);
+        additionalRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("additional not found"));
 
-
-        if (additional == null) {
-            throw new RuntimeException("additional not exists");
-        }
-
-        additionalRepository.deleteByIdAdditional(id);
+        additionalRepository.deleteById(id);
     }
 
     @Transactional
     public AdditionalEntity updateValue(UUID id, BigDecimal cost) {
-        AdditionalEntity additional = additionalRepository.findByIdAdditional(id);
-        if (additional == null) {
-            throw new RuntimeException("additional not exists");
-        }
-
+        AdditionalEntity additional = additionalRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("additional not found"));
         additional.setCost(cost);
 
         return additionalRepository.save(additional);
